@@ -51,7 +51,6 @@ match exec db create_tabel_sql with
 ```
 
 List tables
-* https://stackoverflow.com/questions/82875/how-to-list-the-tables-in-a-sqlite-database-file-that-was-opened-with-attach
 ```
 let show_default_tables = "SELECT name FROM sqlite_master WHERE type='table';";;
 match exec db ~cb show_default_tables with
@@ -63,3 +62,11 @@ match exec db ~cb show_default_tables with
 # Using the orm module
 https://github.com/mirage/orm
 
+
+# References
+
+* https://stackoverflow.com/questions/82875/how-to-list-the-tables-in-a-sqlite-database-file-that-was-opened-with-attach
+* https://www.tutorialspoint.com/sqlite
+* http://www.sqlitetutorial.net/
+* https://mmottl.github.io/sqlite3-ocaml/
+* http://mmottl.github.io/sqlite3-ocaml/api/sqlite3/Sqlite3/index.html
