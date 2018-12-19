@@ -59,3 +59,7 @@ match exec db ~cb show_default_tables with
 | r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
 
 ```
+
+# Using the orm module
+https://github.com/mirage/orm
+
