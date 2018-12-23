@@ -2,6 +2,18 @@
 
 This is the notes I gathered while I was trying to do the tutorial http://www.sqlitetutorial.net/ with OCaml-sqlite.
 
+* [Introcution](#introduction)
+  * [Installation](#installation)
+  * [TL;DR](#tl;dr)
+    * [Create a database](#create-a-database)
+    * [Create a table](#create-a-table)
+    * [Query a database, list the tables](#query-a-database,-list-the-tables)
+* [Tutorial](#tutorial)
+  * [SQLite Simple query][#sqlite-simple-query]
+
+* [Using the orm module](#using-the-orm-module)
+* [references](#references)
+
 ## Introduction
 I follow the www.sqlitetutorial.net to test the OCaml Sqlite3 library. The sample used for the queries can be found at this address: http://www.sqlitetutorial.net/sqlite-sample-database/
 
@@ -18,15 +30,15 @@ Use it in utop:
 #open Sqlite3
 ```
 
-### TL;DR: create a database, a table and do a basic query
-
+### TL;DR
+Create a database, a table and do a basic query
 #### Create a database
 ```ocaml
 let mydb = db_open "test.db";;
 
 ```
 
-#### Create a table:
+#### Create a table
 
 ```
 _________________________________
@@ -54,7 +66,7 @@ match exec db create_tabel_sql with
 | r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
 ```
 
-#### Query a database: List the tables
+#### Query a database, list the tables
 
 * first create a callback that will display gathered information
 
