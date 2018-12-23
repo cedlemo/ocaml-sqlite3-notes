@@ -14,20 +14,20 @@ opam install sqlite3
 
 Use it in utop:
 
-```
+```ocaml
 #require "sqlite3"
 #open Sqlite3
 ```
 
 ### TL;DR: create a database, a table and do a basic query
 
-* Create a database
-```
+#### Create a database
+```ocaml
 let mydb = db_open "test.db";;
 
 ```
 
-* Create a table:
+#### Create a table:
 
 ```
 _________________________________
@@ -42,7 +42,7 @@ _________________________________
 ```
 
 
-```
+```ocaml
 let create_table_sql = "CREATE TABLE contacts (
  contact_id INTEGER PRIMARY KEY,
  first_name TEXT NOT NULL,
@@ -55,10 +55,23 @@ match exec db create_tabel_sql with
 | r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
 ```
 
-* Query a database: List the tables
+#### Query a database: List the tables
 
+* first create a callback that will display gathered information
+
+```ocaml
+let cb row header = match row.(0) with
+| Some a -> print_endline a
+| None -> ();;
 ```
-let show_default_tables = "SELECT name FROM sqlite_master WHERE type='table';";;
+
+* then create the query
+```ocaml
+let sql = "SELECT name FROM sqlite_master WHERE type='table';";;
+```
+
+* then excute the query
+```ocaml
 match exec db ~cb show_default_tables with
 | Rc.OK -> ()
 | r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
