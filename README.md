@@ -3,7 +3,10 @@
 This is the notes I gathered while I was trying to do the tutorial http://www.sqlitetutorial.net/ with OCaml-sqlite.
 
 
-## Installation
+## Introduction
+I follow the www.sqlitetutorial.net to test the OCaml Sqlite3 library. The sample used for the queries can be found at this address: http://www.sqlitetutorial.net/sqlite-sample-database/
+
+### Installation
 
 ```
 opam install sqlite3
@@ -16,14 +19,15 @@ Use it in utop:
 #open Sqlite3
 ```
 
-## Create database and tables
+### TL;DR: create a database, a table and do a basic query
+
+* Create a database
+```
+let mydb = db_open "test.db";;
 
 ```
-let mydb = db_open "test";;
 
-```
-
-Create a table:
+* Create a table:
 
 ```
 _________________________________
@@ -36,6 +40,7 @@ _________________________________
 | phone      TEST NOT NULL UNIQUE|
 |________________________________|
 ```
+
 
 ```
 let create_table_sql = "CREATE TABLE contacts (
@@ -50,7 +55,8 @@ match exec db create_tabel_sql with
 | r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
 ```
 
-List tables
+* Query a database: List the tables
+
 ```
 let show_default_tables = "SELECT name FROM sqlite_master WHERE type='table';";;
 match exec db ~cb show_default_tables with
@@ -59,11 +65,16 @@ match exec db ~cb show_default_tables with
 
 ```
 
-# Using the orm module
+## Tutorial
+in utop: `let db = db_open "./chinook.db";;`
+
+### SQLite Select
+
+## Using the orm module
 https://github.com/mirage/orm
 
 
-# References
+## References
 
 * https://stackoverflow.com/questions/82875/how-to-list-the-tables-in-a-sqlite-database-file-that-was-opened-with-attach
 * https://www.tutorialspoint.com/sqlite
