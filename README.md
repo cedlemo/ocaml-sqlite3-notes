@@ -2,7 +2,6 @@
 
 This is the notes I gathered while I was trying to do the tutorial http://www.sqlitetutorial.net/ with OCaml-sqlite.
 
-
 ## Introduction
 I follow the www.sqlitetutorial.net to test the OCaml Sqlite3 library. The sample used for the queries can be found at this address: http://www.sqlitetutorial.net/sqlite-sample-database/
 
@@ -79,10 +78,63 @@ match exec db ~cb show_default_tables with
 ```
 
 ## Tutorial
-in utop: `let db = db_open "./chinook.db";;`
 
-### SQLite Select
+in utop open the sample database: `let db = db_open "./chinook.db";;`
 
+and create the following callback that will be used to display the results of the query:
+
+```ocaml
+let cb row headers =
+  let n = Array.length row - 1 in
+  let () = for i = 0 to n do
+    let value = match row.(i) with | Some s -> s | None -> "Null" in
+    Printf.printf "| %s: %s |" headers.(i) value
+    done
+  in print_endline "";
+```
+
+### SQLite Simple query
+* Simple SELECT statements
+
+```ocaml
+exec db ~cb "SELECT 1 + 1";;
+| 1 + 1: 2 |
+(* Rc.t = Sqlite3.Rc.OK *)
+exec db ~cb "SELECT 10 / 5, 2 * 4";;
+| 10 / 5: 2 || 2 * 4: 8 |
+(* Rc.t = Sqlite3.Rc.OK *)
+```
+
+* Querying data using SELECT
+
+Define the sql query we want to use:
+
+```ocaml
+let sql = "SELECT trackid, name, composer, unitprice FROM tracks";;
+```
+
+Execute the query:
+```ocaml
+exec db ~cb sql;;
+(* other rows omitted *)
+| TrackId: 3501 || Name: L'orfeo, Act 3, Sinfonia (Orchestra) || Composer: Claudio Monteverdi || UnitPrice: 0.99 |
+| TrackId: 3502 || Name: Quintet for Horn, Violin, 2 Violas, and Cello in E Flat Major, K. 407/386c: III. Allegro || Composer: Wolfgang Amadeus Mozart || UnitPrice: 0.99 |
+| TrackId: 3503 || Name: Koyaanisqatsi || Composer: Philip Glass || UnitPrice: 0.99 |
+(* Rc.t = Sqlite3.Rc.OK *)
+```
+
+* SELECT with the infamous '*'
+
+```ocaml
+let sql = "SELECT * FROM tracks";;
+```
+
+```ocaml
+exec db ~cb sql;;
+(* other rows omitted *)
+| TrackId: 3503 || Name: Koyaanisqatsi || AlbumId: 347 || MediaTypeId: 2 || GenreId: 10 || Composer: Philip Glass || Milliseconds: 206005 || Bytes: 3305164 || UnitPrice: 0.99 |
+(* Rc.t = Sqlite3.Rc.OK *)
+```
 ## Using the orm module
 https://github.com/mirage/orm
 
