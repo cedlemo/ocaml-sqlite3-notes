@@ -2,15 +2,14 @@
 
 This is the notes I gathered while I was trying to do the tutorial http://www.sqlitetutorial.net/ with OCaml-sqlite.
 
-* [Introcution](#introduction)
+* [Introduction](#introduction)
   * [Installation](#installation)
   * [TL;DR](#tl;dr)
     * [Create a database](#create-a-database)
     * [Create a table](#create-a-table)
     * [Query a database, list the tables](#query-a-database,-list-the-tables)
 * [Tutorial](#tutorial)
-  * [SQLite Simple query][#sqlite-simple-query]
-
+  * [SQLite Simple query]()#sqlite-simple-query)
 * [Using the orm module](#using-the-orm-module)
 * [references](#references)
 
