@@ -9,7 +9,8 @@ This is the notes I gathered while I was trying to do the tutorial http://www.sq
     * [Create a table](#create-a-table)
     * [Query a database, list the tables](#query-a-database,-list-the-tables)
 * [Tutorial](#tutorial)
-  * [SQLite Simple query]()#sqlite-simple-query)
+  * [SQLite Simple query](#sqlite-simple-query)
+  * [SQLite Sorting rows](#sqlite-sorting-rows)
 * [Using the orm module](#using-the-orm-module)
 * [references](#references)
 
@@ -146,6 +147,56 @@ exec db ~cb sql;;
 | TrackId: 3503 || Name: Koyaanisqatsi || AlbumId: 347 || MediaTypeId: 2 || GenreId: 10 || Composer: Philip Glass || Milliseconds: 206005 || Bytes: 3305164 || UnitPrice: 0.99 |
 (* Rc.t = Sqlite3.Rc.OK *)
 ```
+
+### SQLite Sorting rows
+From a basic request `let sql = "SELECT name,milliseconds,albumid FROM tracks";;`, if we wanted to order the rows based albumid (ascending) and on the length on the songs (descending), the new request is:
+
+```ocaml
+let sql = "SELECT name,milliseconds,albumid FROM tracks ORDER BY albumid ASC, milliseconds DESC";;
+```
+
+The output will be:
+
+```ocaml
+exec db ~cb sql;;
+(* other rows omitted *)
+| Name: Amy Amy Amy (Outro) || Milliseconds: 663426 || AlbumId: 322 |
+| Name: You Sent Me Flying / Cherry || Milliseconds: 409906 || AlbumId: 322 |
+| Name: In My Bed || Milliseconds: 315960 || AlbumId: 322 |
+| Name: Help Yourself || Milliseconds: 300884 || AlbumId: 322 |
+| Name: Intro / Stronger Than Me || Milliseconds: 234200 || AlbumId: 322 |
+| Name: What Is It About Men || Milliseconds: 209573 || AlbumId: 322 |
+| Name: October Song || Milliseconds: 204846 || AlbumId: 322 |
+| Name: F**k Me Pumps || Milliseconds: 200253 || AlbumId: 322 |
+| Name: Take the Box || Milliseconds: 199160 || AlbumId: 322 |
+| Name: (There Is) No Greater Love (Teo Licks) || Milliseconds: 167933 || AlbumId: 322 |
+| Name: I Heard Love Is Blind || Milliseconds: 129666 || AlbumId: 322 |
+| Name: Slowness || Milliseconds: 215386 || AlbumId: 323 |
+| Name: Prometheus Overture, Op. 43 || Milliseconds: 339567 || AlbumId: 324 |
+(* other rows omitted *)
+(* Rc.t = Sqlite3.Rc.OK *)
+```
+
+If we wanted to order the rows based on the columns milliseconds and albumid in an ascending order (by default) it is possible to use number.
+
+```ocaml
+let sql = "SELECT name,milliseconds,albumid FROM tracks ORDER BY 2,3";;
+```
+
+```ocaml
+exec db ~cb sql;;
+(* other rows omitted *)
+| Name: Battlestar Galactica, Pt. 3 || Milliseconds: 2927802 || AlbumId: 253 |
+| Name: Murder On the Rising Star || Milliseconds: 2935894 || AlbumId: 253 |
+| Name: Battlestar Galactica, Pt. 1 || Milliseconds: 2952702 || AlbumId: 253 |
+| Name: Battlestar Galactica, Pt. 2 || Milliseconds: 2956081 || AlbumId: 253 |
+| Name: The Man With Nine Lives || Milliseconds: 2956998 || AlbumId: 253 |
+| Name: Greetings from Earth, Pt. 1 || Milliseconds: 2960293 || AlbumId: 253 |
+| Name: Through a Looking Glass || Milliseconds: 5088838 || AlbumId: 229 |
+| Name: Occupation / Precipice || Milliseconds: 5286953 || AlbumId: 227 |
+- : Rc.t = Sqlite3.Rc.OK
+```
+
 ## Using the orm module
 https://github.com/mirage/orm
 
