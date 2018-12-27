@@ -14,6 +14,7 @@ This is the notes I gathered while I was trying to do the tutorial http://www.sq
   * [SQLite Filtering data](#sqlite-filtering-data)
     * [Distinct](#distinct)
     * [Where](#where)
+    * [Limit](#limit)
 * [Using the orm module](#using-the-orm-module)
 * [references](#references)
 
@@ -312,6 +313,70 @@ match exec db ~cb sql with
 | Name: Restless and Wild || MediaTypeId: 2 |
 | Name: Princess of the Dawn || MediaTypeId: 2 |
 ```
+
+#### Limit
+
+The `LIMIT` clause, constrain the number of rows returned by a query.
+
+```ocaml
+let sql = "SELECT trackid, name FROM tracks LIMIT 10;";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| TrackId: 1 || Name: For Those About To Rock (We Salute You) |
+| TrackId: 2 || Name: Balls to the Wall |
+| TrackId: 3 || Name: Fast As a Shark |
+| TrackId: 4 || Name: Restless and Wild |
+| TrackId: 5 || Name: Princess of the Dawn |
+| TrackId: 6 || Name: Put The Finger On You |
+| TrackId: 7 || Name: Let's Get It Up |
+| TrackId: 8 || Name: Inject The Venom |
+| TrackId: 9 || Name: Snowballed |
+| TrackId: 10 || Name: Evil Walks |
+```
+
+The `LIMIT` clause accepts an offset:
+```ocaml
+let sql = "SELECT trackid, name FROM tracks LIMIT 10 OFFSET 2;";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| TrackId: 3 || Name: Fast As a Shark |
+| TrackId: 4 || Name: Restless and Wild |
+| TrackId: 5 || Name: Princess of the Dawn |
+| TrackId: 6 || Name: Put The Finger On You |
+| TrackId: 7 || Name: Let's Get It Up |
+| TrackId: 8 || Name: Inject The Venom |
+| TrackId: 9 || Name: Snowballed |
+| TrackId: 10 || Name: Evil Walks |
+| TrackId: 11 || Name: C.O.D. |
+| TrackId: 12 || Name: Breaking The Rules |
+```
+
+which is equivalent to :
+```ocaml
+let sql = "SELECT trackid, name FROM tracks LIMIT 2, 10;";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| TrackId: 3 || Name: Fast As a Shark |
+| TrackId: 4 || Name: Restless and Wild |
+| TrackId: 5 || Name: Princess of the Dawn |
+| TrackId: 6 || Name: Put The Finger On You |
+| TrackId: 7 || Name: Let's Get It Up |
+| TrackId: 8 || Name: Inject The Venom |
+| TrackId: 9 || Name: Snowballed |
+| TrackId: 10 || Name: Evil Walks |
+| TrackId: 11 || Name: C.O.D. |
+| TrackId: 12 || Name: Breaking The Rules |
+```
+
+Notes:
+* `OFFSET` is often used for paginating result sets in web applications.
+* `ORDER BY` is used before `LIMIT` : `SELECT ... FROM ... ORDER BY ... LIMIT ...`
+* the combinaison of `ORDER BY` and `LIMIT OFFSET` are commonly used to get the nth
+highest or lowest value: `SELECT ... FROM ... ORDER BY ... DESC LIMIT 1 OFFSET 1` or
+`SELECT ... FROM ... ORDER BY ... DESC LIMIT 1 OFFSET 1`.
 
 ## Using the orm module
 https://github.com/mirage/orm
