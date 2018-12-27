@@ -13,6 +13,7 @@ This is the notes I gathered while I was trying to do the tutorial http://www.sq
   * [SQLite Sorting rows](#sqlite-sorting-rows)
   * [SQLite Filtering data](#sqlite-filtering-data)
     * [Distinct](#distinct)
+    * [Where](#where)
 * [Using the orm module](#using-the-orm-module)
 * [references](#references)
 
@@ -247,6 +248,69 @@ the `SELECT DISTINCT` clause will apply to all the columns of the SQL statement:
 
 ```
 SELECT city, country FROM customers ORDER BY country;
+```
+
+#### Where
+
+* Where with equality operator:
+
+```ocaml
+let sql = "SELECT name FROM tracks WHERE albumid = 1;";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| Name: For Those About To Rock (We Salute You) |
+| Name: Put The Finger On You |
+| Name: Let's Get It Up |
+| Name: Inject The Venom |
+| Name: Snowballed |
+| Name: Evil Walks |
+| Name: C.O.D. |
+| Name: Breaking The Rules |
+| Name: Night Of The Long Knives |
+| Name: Spellbound
+```
+
+* Where with logical operator to combine expressions
+
+``` ocaml
+let sql = "SELECT name FROM tracks WHERE albumid = 1 AND milliseconds > 250000;";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| Name: For Those About To Rock (We Salute You) |
+| Name: Evil Walks |
+| Name: Breaking The Rules |
+| Name: Spellbound |
+```
+
+* Where with `LIKE` operator:
+```ocaml
+let sql = "SELECT name, composer FROM tracks WHERE composer LIKE '%Smith%';";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| Name: Restless and Wild || Composer: F. Baltes, R.A. Smith-Diesel, S. Kaufman, U. Dirkscneider & W. Hoffman |
+| Name: Princess of the Dawn || Composer: Deaffy & R.A. Smith-Diesel |
+| Name: Killing Floor || Composer: Adrian Smith |
+| Name: Machine Men || Composer: Adrian Smith |
+| Name: 2 Minutes To Midnight || Composer: Adrian Smith/Bruce Dickinson |
+| Name: Can I Play With Madness || Composer: Adrian Smith/Bruce Dickinson/Steve Harris |
+| Name: The Evil That Men Do || Composer: Adrian Smith/Bruce Dickinson/Steve Harris |
+| Name: The Wicker Man || Composer: Adrian Smith/Bruce Dickinson/Steve Harris |
+(* ... *)
+```
+
+* Where with `IN` operator:
+```ocaml
+let sql = "SELECT name, MediaTypeId FROM tracks WHERE mediatypeid IN (2,3);";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| Name: Balls to the Wall || MediaTypeId: 2 |
+| Name: Fast As a Shark || MediaTypeId: 2 |
+| Name: Restless and Wild || MediaTypeId: 2 |
+| Name: Princess of the Dawn || MediaTypeId: 2 |
 ```
 
 ## Using the orm module
