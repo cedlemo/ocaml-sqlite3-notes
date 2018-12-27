@@ -11,6 +11,8 @@ This is the notes I gathered while I was trying to do the tutorial http://www.sq
 * [Tutorial](#tutorial)
   * [SQLite Simple query](#sqlite-simple-query)
   * [SQLite Sorting rows](#sqlite-sorting-rows)
+  * [SQLite Filtering data](#sqlite-filtering-data)
+    * [Distinct](#distinct)
 * [Using the orm module](#using-the-orm-module)
 * [references](#references)
 
@@ -195,6 +197,56 @@ exec db ~cb sql;;
 | Name: Through a Looking Glass || Milliseconds: 5088838 || AlbumId: 229 |
 | Name: Occupation / Precipice || Milliseconds: 5286953 || AlbumId: 227 |
 - : Rc.t = Sqlite3.Rc.OK
+```
+
+### SQLite Filtering data
+
+#### Distinct
+
+with `let sql = "SELECT city FROM customers;";;`, we can see that there are some
+rows with the same cities:
+
+```ocaml
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| City: São José dos Campos |
+| City: Stuttgart |
+| City: Montréal |
+| City: Oslo |
+| City: Prague |
+| City: Prague |
+| City: Vienne |
+| City: Brussels |
+| City: Copenhagen |
+| City: São Paulo |
+| City: São Paulo |
+```
+
+This can be solved using `DISTINCT`:
+
+```ocaml
+val sql : string = "SELECT DISTINCT city FROM customers;"
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| City: São José dos Campos |
+| City: Stuttgart |
+| City: Montréal |
+| City: Oslo |
+| City: Prague |
+| City: Vienne |
+| City: Brussels |
+| City: Copenhagen |
+| City: São Paulo |
+| City: Rio de Janeiro |
+```
+
+Note:
+the `SELECT DISTINCT` clause will apply to all the columns of the SQL statement:
+
+```
+SELECT city, country FROM customers ORDER BY country;
 ```
 
 ## Using the orm module
