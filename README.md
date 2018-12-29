@@ -15,6 +15,7 @@ This is the notes I gathered while I was trying to do the tutorial http://www.sq
     * [Distinct](#distinct)
     * [Where](#where)
     * [Limit](#limit)
+    * [Between](#between)
 * [Using the orm module](#using-the-orm-module)
 * [references](#references)
 
@@ -378,6 +379,57 @@ Notes:
 highest or lowest value: `SELECT ... FROM ... ORDER BY ... DESC LIMIT 1 OFFSET 1` or
 `SELECT ... FROM ... ORDER BY ... DESC LIMIT 1 OFFSET 1`.
 
+### Between
+Can be used with `SELECT`, `DELETE`, `UPDATE`, `REPLACE` in the `WHERE` clause.
+
+```ocaml
+let sql = "SELECT invoiceid, BillingAddress, Total FROM invoices WHERE Total BETWEEN 14.91 AND 18.86 ORDER BY
+total;";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| InvoiceId: 193 || BillingAddress: Berger Straße 10 || Total: 14.91 |
+| InvoiceId: 103 || BillingAddress: 162 E Superior Street || Total: 15.86 |
+| InvoiceId: 208 || BillingAddress: Ullevålsveien 14 || Total: 15.86 |
+| InvoiceId: 306 || BillingAddress: Klanova 9/506 || Total: 16.86 |
+| InvoiceId: 313 || BillingAddress: 68, Rue Jouvence || Total: 16.86 |
+| InvoiceId: 88 || BillingAddress: Calle Lira, 198 || Total: 17.91 |
+| InvoiceId: 89 || BillingAddress: Rotenturmstraße 4, 1010 Innere Stadt || Total: 18.86 |
+| InvoiceId: 201 || BillingAddress: 319 N. Frances Street || Total: 18.86 |
+```
+* `NOT BETWEEN`
+
+```ocaml
+let sql = "SELECT invoiceid, BillingAddress, Total FROM invoices WHERE Total NOT BETWEEN 1 AND 20 ORDER BY tot
+al;";;
+match exec db ~cb sql with
+| Rc.OK -> ()
+| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| InvoiceId: 6 || BillingAddress: Berger Straße 10 || Total: 0.99 |
+| InvoiceId: 13 || BillingAddress: 1600 Amphitheatre Parkway || Total: 0.99 |
+| InvoiceId: 20 || BillingAddress: 110 Raeburn Pl || Total: 0.99 |
+| InvoiceId: 27 || BillingAddress: 5112 48 Street || Total: 0.99 |
+| InvoiceId: 34 || BillingAddress: Praça Pio X, 119 || Total: 0.99 |
+| InvoiceId: 41 || BillingAddress: C/ San Bernardo 85 || Total: 0.99 |
+| InvoiceId: 48 || BillingAddress: 796 Dundas Street West || Total: 0.99 |
+(* ... *)
+```
+
+* `BETWEEN` dates
+
+```ocaml
+let sql = "SELECT invoiceid, BillingAddress, InvoiceDate, Total FROM invoices WHERE invoicedate BETWEEN '2010-01-01' AND '2010-01-31';";;
+match exec db ~cb sql with
+| Rc.OK -> () | r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+| InvoiceId: 84 || BillingAddress: 68, Rue Jouvence || InvoiceDate: 2010-01-08 00:00:00 || Total: 1.98 |
+| InvoiceId: 85 || BillingAddress: Erzsébet krt. 58. || InvoiceDate: 2010-01-08 00:00:00 || Total: 1.98 |
+| InvoiceId: 86 || BillingAddress: Via Degli Scipioni, 43 || InvoiceDate: 2010-01-09 00:00:00 || Total: 3.96 |
+| InvoiceId: 87 || BillingAddress: Celsiusg. 9 || InvoiceDate: 2010-01-10 00:00:00 || Total: 6.94 |
+| InvoiceId: 88 || BillingAddress: Calle Lira, 198 || InvoiceDate: 2010-01-13 00:00:00 || Total: 17.91 |
+| InvoiceId: 89 || BillingAddress: Rotenturmstraße 4, 1010 Innere Stadt || InvoiceDate: 2010-01-18 00:00:00 || Total: 18.86 |
+| InvoiceId: 90 || BillingAddress: 801 W 4th Street || InvoiceDate: 2010-01-26 00:00:00 || Total: 0.99 |
+
+```
 ## Using the orm module
 https://github.com/mirage/orm
 
