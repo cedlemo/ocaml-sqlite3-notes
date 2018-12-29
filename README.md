@@ -16,6 +16,7 @@ This is the notes I gathered while I was trying to do the tutorial http://www.sq
     * [Where](#where)
     * [Limit](#limit)
     * [Between](#between)
+  * [Joining Tables](#joining-tables)
 * [Using the orm module](#using-the-orm-module)
 * [references](#references)
 
@@ -379,7 +380,7 @@ Notes:
 highest or lowest value: `SELECT ... FROM ... ORDER BY ... DESC LIMIT 1 OFFSET 1` or
 `SELECT ... FROM ... ORDER BY ... DESC LIMIT 1 OFFSET 1`.
 
-### Between
+#### Between
 Can be used with `SELECT`, `DELETE`, `UPDATE`, `REPLACE` in the `WHERE` clause.
 
 ```ocaml
@@ -430,6 +431,19 @@ match exec db ~cb sql with
 | InvoiceId: 90 || BillingAddress: 801 W 4th Street || InvoiceDate: 2010-01-26 00:00:00 || Total: 0.99 |
 
 ```
+
+### Joining Tables
+SQLite supports :
+* inner join: if there are no match for a value of table A in table B, the row will not be in the result of the query. The result number of rows will be <= to the number of rows of A.
+* left join: if there are no match for the pivot value of table A in table B, the rows will be in the result of the query and the missing values of B will be filled with NULL. The number of rows of the result of the query will be equal to the number of rows of A.
+* cross join: this is the Cartesion product, so the number of rows of the result of the query will be equal to n rows of A x n rows of B.
+* self join: this is used to join a table on itself.
+* full outer join: this is a combinaison of `LEFT JOIN` and `RIGHT JOIN` (which do not exist in SQLite).
+
+```ocaml
+let sql = "SELECT trackid, name, title FROM tracks INNER JOIN albums ON albums.albumid = tracks.albumid;";;
+```
+
 ## Using the orm module
 https://github.com/mirage/orm
 
