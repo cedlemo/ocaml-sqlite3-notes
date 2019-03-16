@@ -1,0 +1,5 @@
+"Rule: ocaml: cmx* & o* -> native (%=sample_1 )": "\242\170\142\017\192\027\007Bj\175\159\193\133\002\017\026"
+"Rule: ocaml: ml -> cmo & cmi (%=sample_1 )": "\144\244H\184\192*\011b\150X\134\158Z&\233\238"
+"Rule: ocaml: ml & cmi -> cmx & o (%=sample_1 )": "\192\231$m\231\237\165\187\132sd\026\161\187^\247"
+"Resource: /home/cedlemo/Projects/OCaml/OCaml-sqlite-tutorial/samples/sample_1.ml": "\254\214\1534E\002S4\144\198\026\245\179*\232\241"
+"Rule: ocaml dependencies ml (%=sample_1 )": "6\182A\028\231\148\141\173$\185\168\012\150+c\162"
