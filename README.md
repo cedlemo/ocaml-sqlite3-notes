@@ -13,7 +13,13 @@
 opam install sqlite3
 ```
 
-Use it in utop:
+* Use it in a file:
+
+```ocaml
+open Sqlite3
+```
+
+* Use it in utop:
 
 ```ocaml
 #require "sqlite3"
@@ -21,11 +27,12 @@ Use it in utop:
 ```
 
 ## Basic usage
-Create a database, a table and do a basic query
+Create a database, a table and do a basic query. The full code can be found in
+*samples/sample_1.ml*.
 
 ### Create a database
 ```ocaml
-let mydb = db_open "test.db";;
+let mydb = db_open "test.db"
 ```
 
 ### Create a table
@@ -46,16 +53,35 @@ _________________________________
 * the query to create the table
 
 ```ocaml
-let create_table_sql = "CREATE TABLE contacts (
- contact_id INTEGER PRIMARY KEY,
- first_name TEXT NOT NULL,
- last_name TEXT NOT NULL,
- email text NOT NULL UNIQUE,
- phone text NOT NULL UNIQUE
-);" in
-match exec db create_tabel_sql with
-| Rc.OK -> print_endline "Ok"
-| r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
+let create_table_sql = "CREATE TABLE contacts ( \
+                          contact_id INTEGER PRIMARY KEY, \
+                          first_name TEXT NOT NULL, \
+                          last_name TEXT NOT NULL, \
+                          email text NOT NULL UNIQUE, \
+                          phone text NOT NULL UNIQUE \
+                        );"
+
+let db = db_open "test.db"
+
+let () =
+  match exec db create_table_sql with
+  | Rc.OK -> print_endline "Ok"
+  | r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db)
+```
+
+With the command line client of sqlite, we can verify the good execution of our
+code with:
+
+```
+sqlite3 test.db
+sqlite> SELECT name FROM sqlite_master WHERE type='table';
+contacts
+sqlite> PRAGMA table_info(contacts);
+0|contact_id|INTEGER|0||1
+1|first_name|TEXT|1||0
+2|last_name|TEXT|1||0
+3|email|text|1||0
+4|phone|text|1||0
 ```
 
 ### Query a database and list the tables
