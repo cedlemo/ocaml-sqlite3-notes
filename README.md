@@ -7,7 +7,7 @@ This is the notes I gathered while I was trying to do the tutorial http://www.sq
   * [TL;DR](#tl;dr)
     * [Create a database](#create-a-database)
     * [Create a table](#create-a-table)
-    * [Query a database, list the tables](#query-a-database,-list-the-tables)
+    * [Query a database and list the tables](#query-a-database-and-list-the-tables)
 * [Tutorial](#tutorial)
   * [SQLite Simple query](#sqlite-simple-query)
   * [SQLite Sorting rows](#sqlite-sorting-rows)
@@ -38,14 +38,13 @@ Use it in utop:
 
 ### TL;DR
 Create a database, a table and do a basic query
+
 #### Create a database
 ```ocaml
 let mydb = db_open "test.db";;
-
 ```
 
 #### Create a table
-
 ```
 _________________________________
 [Contacts                        ]
@@ -72,7 +71,7 @@ match exec db create_tabel_sql with
 | r -> prerr_endline (Rc.to_string r); prerr_endline (errmsg db);;
 ```
 
-#### Query a database, list the tables
+#### Query a database and list the tables
 
 * first create a callback that will display gathered information
 
